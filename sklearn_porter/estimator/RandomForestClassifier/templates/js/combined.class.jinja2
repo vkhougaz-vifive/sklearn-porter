@@ -1,9 +1,9 @@
 {% extends 'base.combined.class' %}
 
 {% block content %}
-var {{ class_name }} = function() {
+export class {{ class_name }} {
 
-    var _findMax = function(nums) {
+    private _findMax(nums: number[]) {
         var idx = 0;
         for (var i = 0, l = nums.length; i < l; i++) {
             idx = nums[i] > nums[idx] ? i : idx;
@@ -11,7 +11,7 @@ var {{ class_name }} = function() {
         return idx;
     };
 
-    var _normVals = function(nums) {
+    private _normVals(nums: number[]) {
         var i, l = nums.length;
         var result = [], sum = 0.;
         for (i = 0; i < l; i++) {
@@ -29,26 +29,18 @@ var {{ class_name }} = function() {
         return result;
     };
 
-    var forest = [];
+    private forest: Array<(features: number[]) => number[]>;
 
-    {{ method }}
+    constructor() {
+        this.forest = [];
+        const _normVals = this._normVals;
+        {{ method }}
+    
 };
 
-var main = function () {
-    if (typeof process !== 'undefined' && typeof process.argv !== 'undefined') {
-        if (process.argv.length - 2 !== {{ n_features }}) {
-            var IllegalArgumentException = function(message) {
-                this.message = message;
-                this.name = "IllegalArgumentException";
-            }
-            throw new IllegalArgumentException("You have to pass {{ n_features }} features.");
-        }
-    }
-
-    // Features:
-    var features = process.argv.slice(2);
-    for (var i = 0; i < features.length; i++) {
-        features[i] = parseFloat(features[i]);
+export function predict(features: number[]) {
+    if (features.length !== {{ n_features }}) {
+        throw new Error("Must pass {{ n_features }} features")
     }
 
     // Estimator:
@@ -71,9 +63,5 @@ var main = function () {
         console.log("Probability of class #" + i + " : " + probabilities[i]);
     }
     {% endif %}
-}
-
-if (require.main === module) {
-    main();
 }
 {% endblock %}
