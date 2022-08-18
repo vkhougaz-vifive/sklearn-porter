@@ -2,6 +2,7 @@
 
 {% block content %}
 export class {{ class_name }} {
+    public featureNames: string[] = {{ feature_names }};
 
     private _findMax(nums: number[]) {
         var idx = 0;

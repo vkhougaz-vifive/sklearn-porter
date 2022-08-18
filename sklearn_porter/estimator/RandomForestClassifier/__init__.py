@@ -75,6 +75,7 @@ class RandomForestClassifier(EstimatorBase, EstimatorApiABC):
             n_estimators=est.n_estimators,
             n_classes=est.n_classes_,
             n_features=est.estimators_[0].n_features_,
+            feature_names=dumps(est.classes_.tolist())
         )
         L.info('Meta info (keys): {}'.format(self.meta_info.keys()))
         L.opt(lazy=True).debug('Meta info: {}'.format(self.meta_info))
