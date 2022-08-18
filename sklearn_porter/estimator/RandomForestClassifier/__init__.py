@@ -82,9 +82,10 @@ class RandomForestClassifier(EstimatorBase, EstimatorApiABC):
 
         # Extract and save model data:
         self.model_data['estimators'] = []
-        for e in est.estimators_:
+        for e, feature_name in zip(est.estimators_, est.classes_):
             self.model_data['estimators'].append(
                 dict(
+                    feature_name=feature_name,
                     lefts=e.tree_.children_left.tolist(),
                     rights=e.tree_.children_right.tolist(),
                     thresholds=e.tree_.threshold.tolist(),
