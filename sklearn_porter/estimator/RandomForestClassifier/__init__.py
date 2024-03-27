@@ -7,7 +7,7 @@ from loguru import logger as L
 
 # scikit-learn
 from jinja2 import Environment
-from sklearn.ensemble.forest import \
+from sklearn.ensemble import \
     RandomForestClassifier as RandomForestClassifierClass
 from sklearn.tree import DecisionTreeClassifier
 
@@ -17,6 +17,18 @@ from sklearn_porter import exceptions as exception
 from sklearn_porter.estimator.EstimatorApiABC import EstimatorApiABC
 from sklearn_porter.estimator.EstimatorBase import EstimatorBase
 
+import json
+import numpy as np
+
+class NpEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super(NpEncoder, self).default(obj)
 
 class RandomForestClassifier(EstimatorBase, EstimatorApiABC):
     """Extract model data and port a RandomForestClassifier classifier."""
@@ -67,23 +79,25 @@ class RandomForestClassifier(EstimatorBase, EstimatorApiABC):
             est.estimators_[idx] for idx in range(est.n_estimators)
         ]
         self.n_estimators = len(self.estimators)
-        self.n_features = est.estimators_[0].n_features_
+        self.n_features = est.estimators_[0].n_features_in_
         self.n_classes = est.n_classes_
 
         # Extract and save meta information:
         self.meta_info = dict(
             n_estimators=est.n_estimators,
             n_classes=est.n_classes_,
-            n_features=est.estimators_[0].n_features_,
+            n_features=est.estimators_[0].n_features_in_,
+            feature_names=dumps(est.classes_.tolist(), cls=NpEncoder)
         )
         L.info('Meta info (keys): {}'.format(self.meta_info.keys()))
         L.opt(lazy=True).debug('Meta info: {}'.format(self.meta_info))
 
         # Extract and save model data:
         self.model_data['estimators'] = []
-        for e in est.estimators_:
+        for e, feature_name in zip(est.estimators_, est.classes_):
             self.model_data['estimators'].append(
                 dict(
+                    feature_name=feature_name,
                     lefts=e.tree_.children_left.tolist(),
                     rights=e.tree_.children_right.tolist(),
                     thresholds=e.tree_.threshold.tolist(),
@@ -142,7 +156,7 @@ class RandomForestClassifier(EstimatorBase, EstimatorApiABC):
             tpl_class = tpls.get_template('exported.class')
             out_class = tpl_class.render(**plas)
             model_data = self.model_data.get('estimators')
-            model_data = dumps(model_data, separators=(',', ':'))
+            model_data = dumps(model_data, separators=(',', ':'), cls=NpEncoder)
             return out_class, model_data
 
         # Make 'attached' variant:
@@ -150,7 +164,7 @@ class RandomForestClassifier(EstimatorBase, EstimatorApiABC):
             tpl_class = tpls.get_template('attached.class')
             tpl_init = tpls.get_template('init')
             model_data = self.model_data.get('estimators')
-            model_data = dumps(model_data, separators=(',', ':'))
+            model_data = dumps(model_data, separators=(',', ':'), cls=NpEncoder)
 
             if language is enum.Language.PHP:
                 model_data = "json_decode('" + model_data + "', true)"
