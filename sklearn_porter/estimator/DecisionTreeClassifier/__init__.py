@@ -7,7 +7,7 @@ from jinja2 import Environment
 from loguru import logger as L
 
 # scikit-learn
-from sklearn.tree.tree import \
+from sklearn.tree import \
     DecisionTreeClassifier as DecisionTreeClassifierClass
 
 # sklearn-porter
@@ -67,14 +67,14 @@ class DecisionTreeClassifier(EstimatorBase, EstimatorApiABC):
 
         # Is the estimator fitted?
         try:
-            getattr(est, 'n_features_')  # for sklearn >  0.19
+            getattr(est, 'n_features_in_')  # for sklearn >  0.19
             getattr(est.tree_, 'value')  # for sklearn <= 0.18
         except AttributeError:
             raise exception.NotFittedEstimatorError(self.estimator_name)
 
         # Extract and save meta information:
         self.meta_info = dict(
-            n_features=est.n_features_,
+            n_features=est.n_features_in_,
             n_classes=len(est.tree_.value.tolist()[0][0]),
         )
         L.info('Meta info (keys): {}'.format(self.meta_info.keys()))

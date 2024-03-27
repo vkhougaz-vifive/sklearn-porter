@@ -371,7 +371,7 @@ class Estimator:
 
         # Classifiers:
         if name == 'DecisionTreeClassifier':
-            from sklearn.tree.tree import (
+            from sklearn.tree import (
                 DecisionTreeClassifier as DecisionTreeClassifierClass,
             )
 
@@ -382,7 +382,7 @@ class Estimator:
 
                 return DecisionTreeClassifier(est)
         elif name == 'AdaBoostClassifier':
-            from sklearn.ensemble.weight_boosting import (
+            from sklearn.ensemble import (
                 AdaBoostClassifier as AdaBoostClassifierClass,
             )
 
@@ -393,7 +393,7 @@ class Estimator:
 
                 return AdaBoostClassifier(est)
         elif name == 'RandomForestClassifier':
-            from sklearn.ensemble.forest import (
+            from sklearn.ensemble import (
                 RandomForestClassifier as RandomForestClassifierClass,
             )
 
@@ -404,7 +404,7 @@ class Estimator:
 
                 return RandomForestClassifier(est)
         elif name == 'ExtraTreesClassifier':
-            from sklearn.ensemble.forest import (
+            from sklearn.ensemble import (
                 ExtraTreesClassifier as ExtraTreesClassifierClass,
             )
 
@@ -415,28 +415,28 @@ class Estimator:
 
                 return ExtraTreesClassifier(est)
         elif name == 'LinearSVC':
-            from sklearn.svm.classes import LinearSVC as LinearSVCClass
+            from sklearn.svm import LinearSVC as LinearSVCClass
 
             if isinstance(estimator, LinearSVCClass):
                 from sklearn_porter.estimator.LinearSVC import LinearSVC
 
                 return LinearSVC(est)
         elif name == 'SVC':
-            from sklearn.svm.classes import SVC as SVCClass
+            from sklearn.svm import SVC as SVCClass
 
             if isinstance(estimator, SVCClass):
                 from sklearn_porter.estimator.SVC import SVC
 
                 return SVC(est)
         elif name == 'NuSVC':
-            from sklearn.svm.classes import NuSVC as NuSVCClass
+            from sklearn.svm import NuSVC as NuSVCClass
 
             if isinstance(estimator, NuSVCClass):
                 from sklearn_porter.estimator.NuSVC import NuSVC
 
                 return NuSVC(est)
         elif name == 'KNeighborsClassifier':
-            from sklearn.neighbors.classification import (
+            from sklearn.neighbors import (
                 KNeighborsClassifier as KNeighborsClassifierClass,
             )
 
@@ -462,7 +462,7 @@ class Estimator:
                 return BernoulliNB(est)
         elif name == 'MLPClassifier':
             try:
-                from sklearn.neural_network.multilayer_perceptron import (
+                from sklearn.neural_network import (
                     MLPClassifier as MLPClassifierClass,
                 )
             except ImportError:
@@ -480,7 +480,7 @@ class Estimator:
         # Regressors:
         elif name == 'MLPRegressor':
             try:
-                from sklearn.neural_network.multilayer_perceptron import (
+                from sklearn.neural_network import (
                     MLPRegressor as MLPRegressorClass,
                 )
             except ImportError:
@@ -851,14 +851,14 @@ class Estimator:
         """
 
         # scikit-learn version < 0.18.0
-        from sklearn.tree.tree import DecisionTreeClassifier
-        from sklearn.ensemble.weight_boosting import AdaBoostClassifier
-        from sklearn.ensemble.forest import RandomForestClassifier
-        from sklearn.ensemble.forest import ExtraTreesClassifier
-        from sklearn.svm.classes import LinearSVC
-        from sklearn.svm.classes import SVC
-        from sklearn.svm.classes import NuSVC
-        from sklearn.neighbors.classification import KNeighborsClassifier
+        from sklearn.tree import DecisionTreeClassifier
+        from sklearn.ensemble import AdaBoostClassifier
+        from sklearn.ensemble import RandomForestClassifier
+        from sklearn.ensemble import ExtraTreesClassifier
+        from sklearn.svm import LinearSVC
+        from sklearn.svm import SVC
+        from sklearn.svm import NuSVC
+        from sklearn.neighbors import KNeighborsClassifier
         from sklearn.naive_bayes import GaussianNB
         from sklearn.naive_bayes import BernoulliNB
 
@@ -877,7 +877,7 @@ class Estimator:
 
         # scikit-learn version >= 0.18.0
         try:
-            from sklearn.neural_network.multilayer_perceptron import (
+            from sklearn.neural_network import (
                 MLPClassifier,
             )
         except ImportError:
@@ -903,7 +903,7 @@ class Estimator:
 
         # scikit-learn version >= 0.18.0
         try:
-            from sklearn.neural_network.multilayer_perceptron import (
+            from sklearn.neural_network import (
                 MLPRegressor,
             )
         except ImportError:

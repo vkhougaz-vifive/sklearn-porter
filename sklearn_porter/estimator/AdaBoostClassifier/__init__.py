@@ -7,7 +7,7 @@ from jinja2 import Environment
 from loguru import logger as L
 
 # scikit-learn
-from sklearn.ensemble.weight_boosting import \
+from sklearn.ensemble import \
     AdaBoostClassifier as AdaBoostClassifierClass
 from sklearn.tree import DecisionTreeClassifier
 
